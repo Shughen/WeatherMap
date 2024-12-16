@@ -3,17 +3,10 @@
 ## **Description du projet**  
 Ce projet est un **tableau de bord interactif** développé avec **Streamlit** et **Plotly**.  
 Il permet de visualiser les données météorologiques issues de l'API **OpenWeatherMap**.  
-Pour l'exemple, les données utilisées proviennent de **La Roche-sur-Yon** en France.  
 
-Vous pouvez facilement adapter le projet pour récupérer les données d'autres villes en modifiant les paramètres de l'API.  
-Les principales fonctionnalités incluent :  
-- L'affichage des températures horaires.  
-- Les moyennes journalières.  
-- Les statistiques descriptives des conditions météorologiques.
+Pour l'exemple, les données utilisées proviennent de**La Roche-sur-Yon** en France, mais vous pouvez facilement les adapter pour d'autres villes en modifiant les paramètres de l'API.
 
-Vous pouvez facilement adapter le projet pour récupérer les données d'autres villes en modifiant les paramètres de l'API.  
-[Obtenez une clé API OpenWeatherMap ici](https://openweathermap.org/api) : 
-1000 appels API gratuits par jour.
+Les données sont stockées dans une base **PostgreSQL**, puis utilisées pour générer des graphiques dynamiques accessibles via une interface web locale grâce à **Streamlit**.
 
 ---
 
@@ -76,6 +69,7 @@ cd nom_du_repo
 Exécutez le script SQL suivant pour créer les tables nécessaires :
 ```
 CREATE SCHEMA IF NOT EXISTS meteo;
+
 CREATE TABLE IF NOT EXISTS meteo.donnees_brutes (
     id SERIAL PRIMARY KEY,
     date_heure TIMESTAMP,
@@ -84,14 +78,20 @@ CREATE TABLE IF NOT EXISTS meteo.donnees_brutes (
     description VARCHAR(255)
 );
 ```
+### 3. Configuration de l'API
+Ajoutez votre clé API OpenWeatherMap dans un fichier .env (exemple : .env dans le répertoire racine) :
 
-### 3. Lancer le tableau de bord
+```
+API_KEY=Votre_cle_API_OpenWeatherMap
+```
+---
+### 4. Lancer le tableau de bord
 ```
 streamlit run streamlit_app.py
 ```
 ---
 
-### 4. Changer de localisation
+### 5. Changer de localisation
 Dans le fichier `extractAPI.py`, remplacez la valeur de `VILLE` :  
 ```python
 VILLE = 'Paris,FR'  # Exemple : pour récupérer les données de Paris
@@ -105,6 +105,8 @@ nom_du_repo/
 │-- streamlit_app.py       # Tableau de bord interactif
 │-- README.md              # Documentation du projet
 │-- requirements.txt       # Liste des dépendances
+│-- .env                   # Clé API OpenWeatherMap (à créer) + informations de connexion à la base PostgreSQL
+│-- images/                # Captures d'écran du projet
 ```
 ---
 ### **Aperçu du projet**  
@@ -112,17 +114,14 @@ Voici quelques captures d'écran du tableau de bord interactif :
 
 - **Moyennes journalières de température et d'humidité**  
 
-  _Graphique représentant les températures et humidités moyennes par jour._  
   ![Moyennes Journalieres](images/moyennes_journalieres.png)
 
 - **Évolution des températures avec tendance linéaire**  
-
-  _Ce graphique montre la variation des températures heure par heure avec une tendance calculée automatiquement._  
+ 
   ![Températures Horaires](images/temperatures_horaires.png)
 
 - **Histogramme des descriptions météo**  
-
-  _Histogramme présentant la répartition des conditions météorologiques (pluie, nuageux, etc.)._  
+  
   ![Descriptions Meteo](images/histogramme_descriptions.png)
 
 ---
@@ -130,4 +129,4 @@ Voici quelques captures d'écran du tableau de bord interactif :
 - Rémi Beaurain
 ---
 ## **Licence**  
-Ce projet est sous licence MIT. Vous pouvez l'utiliser librement, le modifier et le partager.  
+Ce projet est sous licence **MIT**. Vous pouvez l'utiliser librement, le modifier et le partager.  
