@@ -82,38 +82,43 @@ fig1.update_layout(
 
 st.plotly_chart(fig1)
 
-# 2. Températures horaires avec tendance linéaire
-st.header("Évolution des températures heure par heure avec tendance linéaire")
+# 2. Températures avec tendance linéaire
+st.header("Évolution quotidienne des températures avec tendance linéaire")
+
+# Agréger les données par jour
+df_weather['date'] = df_weather['date_heure'].dt.date  # Extraire seulement la date
+df_daily_temp = df_weather.groupby('date')['temperature'].mean().reset_index()
 
 # Calcul de la droite de tendance
-x = df_weather["date_heure"].astype('int64') // 10**9  # Convertir datetime en timestamps
-y = df_weather["temperature"]
+x = pd.to_datetime(df_daily_temp['date']).astype('int64') // 10**9  # Convertir datetime en timestamps
+y = df_daily_temp["temperature"]
 coefficients = np.polyfit(x, y, 1)
 y_trend = coefficients[0] * x + coefficients[1]
 
 # Création du graphique
 fig2 = go.Figure()
 fig2.add_trace(go.Scatter(
-    x=df_weather["date_heure"],
-    y=df_weather["temperature"],
+    x=df_daily_temp["date"],
+    y=df_daily_temp["temperature"],
     mode="lines+markers",
-    name="Température (°C)",
+    name="Température Moyenne (°C)",
     line=dict(color="blue", width=2)
 ))
 fig2.add_trace(go.Scatter(
-    x=df_weather["date_heure"],
+    x=df_daily_temp["date"],
     y=y_trend,
     mode="lines",
     name="Tendance linéaire",
     line=dict(color="orange", width=3, dash="dash")
 ))
 fig2.update_layout(
-    title="Évolution des températures heure par heure avec tendance linéaire",
+    title="Évolution quotidienne des températures avec tendance linéaire",
     xaxis_title="Date",
-    yaxis_title="Température (°C)",
+    yaxis_title="Température Moyenne (°C)",
     showlegend=True
 )
 st.plotly_chart(fig2)
+
 
 # 3. Histogramme des descriptions météo
 st.header("Fréquence des conditions météorologiques")
@@ -147,7 +152,7 @@ if len(date_range) == 2:
 
     # Bouton pour exporter en CSV
     csv_buffer = BytesIO()
-    filtered_data.to_csv(csv_buffer, index=False)
+    filtered_data.to_csv(csv_buffer, index=False, encoding='utf-8-sig', sep=';', decimal=',')
     st.download_button(
         label="Exporter les données filtrées en CSV",
         data=csv_buffer.getvalue(),
