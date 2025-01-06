@@ -4,7 +4,7 @@
 Ce projet est un **tableau de bord interactif** développé avec **Streamlit** et **Plotly**.  
 Il permet de visualiser les données météorologiques issues de l'API **OpenWeatherMap**.  
 
-Pour l'exemple, les données utilisées proviennent de**La Roche-sur-Yon** en France, mais vous pouvez facilement les adapter pour d'autres villes en modifiant les paramètres de l'API.
+Pour l'exemple, les données utilisées proviennent de **La Roche-sur-Yon** en France, mais vous pouvez facilement les adapter pour d'autres villes en modifiant les paramètres de l'API.
 
 Les données sont stockées dans une base **PostgreSQL**, puis utilisées pour générer des graphiques dynamiques accessibles via une interface web locale grâce à **Streamlit**.
 
